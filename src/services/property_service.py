@@ -29,10 +29,15 @@ def get_properties(filters: dict) -> list:
     WHERE s.name IN ('pre_venta', 'en_venta', 'vendido')
     """
 
-    cursor.execute(query)
+    values = []
+
+    if "year" in filters:
+        query += " AND p.year = %s"
+        values.append(filters["year"])
+
+    cursor.execute(query, values)
     results = cursor.fetchall()
 
     cursor.close()
     connection.close()
-
     return results
