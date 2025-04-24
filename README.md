@@ -71,7 +71,7 @@ Devuelve una lista de propiedades visibles, opcionalmente filtradas.
 | Parámetro | Tipo     | Descripción                                       |
 |-----------|----------|---------------------------------------------------|
 | `year`    | int      | Año de construcción de la propiedad               |
-| `city`    | string   | Ciudad exacta (ejemplo: `Bogotá`)                |
+| `city`    | string   | Ciudad exacta (ejemplo: `bogota`)                |
 | `status`  | string   | Uno de: `pre_venta`, `en_venta`, `vendido`       |
 
 Cabe aclarar que a pesar de que en `docs/filters.json` está los posibles filtros, este archivo es de mera información y no tiene ningún propósito de prueba, todos los filtros son tratados a través de parámetros.
@@ -83,7 +83,7 @@ Cabe aclarar que a pesar de que en `docs/filters.json` está los posibles filtro
 `/properties`
 
 
-`/properties?city=Bogotá`
+`/properties?city=bogota`
 
 
 `/properties?year=2020&status=pre_venta`
@@ -114,5 +114,64 @@ El microservicio fue desarrollado completamente con TDD. Las pruebas unitarias c
 
 ### Colecciones de Postman
 Se incluye una colección de Postman en `collections/` para facilitar el consumo y prueba del microservicio. Puede ser importada directamente desde la aplicación Postman.
+
+### Ejecución del proyecto
+A continuación se explican los pasos necesarios para correr el microservicio localmente, así como ejecutar las pruebas unitarias.
+
+#### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/habi-prueba-tecnica.git
+cd habi-prueba-tecnica
+```
+
+#### 2. Crear y activar el entorno virtual
+
+```
+python -m venv .venv
+source .venv/bin/activate  # En Linux/macOS
+.venv\Scripts\activate     # En Windows
+```
+
+#### 3. Instalar dependencias
+
+```
+pip install -r requirements.txt
+```
+
+#### 4. Configurar variables de entorno
+Crea un archivo .env en la raíz del proyecto con el siguiente contenido (usando las credenciales de la base de datos proporcionadas):
+
+```
+DB_HOST=...
+DB_PORT=...
+DB_USER=...
+DB_PASSWORD=...
+DB_NAME=...
+```
+
+#### 5. Ejecutar pruebas unitarias
+Desde la raíz del proyecto:
+
+```
+python -m tests.test_property_service
+```
+
+
+#### 6. Iniciar el servidor REST
+Desde la raíz del proyecto:
+
+```
+python src.api.server
+```
+
+Por último, para probar los endpoints directamente desde Postman o tu navegador.
+
+`GET /properties`
+
+`GET /properties?city=bogota&year=2020`
+
+`GET /health (para verificar que el servicio está activo)`
+
 
 # Servicio de "Me gusta"
