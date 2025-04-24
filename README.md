@@ -121,7 +121,7 @@ A continuación se explican los pasos necesarios para correr el microservicio lo
 #### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/habi-prueba-tecnica.git
+git clone https://github.com/SantiagoOso02/habi-prueba-tecnica
 cd habi-prueba-tecnica
 ```
 
