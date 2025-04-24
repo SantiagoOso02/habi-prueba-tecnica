@@ -213,3 +213,69 @@ Ambos diagramas se encuentran en la carpeta `docs/`
 ### SQL para extender el modelo
 
 El código SQL para extender esta parte del modelo se encuentra en el archivo `docs/ms2.sql`.
+
+
+# Puntos extra
+
+## Punto 1. TDD
+
+Todo el desarrollo del microservicio de consulta fue realizado siguiendo la metodología **TDD (Test-Driven Development)**.  
+Cada funcionalidad se implementó de forma incremental, comenzando con la escritura de pruebas unitarias que definían el comportamiento esperado del sistema, seguidas de la implementación del código mínimo necesario para que dichas pruebas pasaran. Finalmente, se realizaron refactorizaciones conservando las pruebas en verde.
+
+Este enfoque permitió garantizar una mayor confiabilidad, cobertura de pruebas y calidad del código entregado.
+
+## Punto 2. Propuesta para mejorar rendimiento en la base de datos
+
+
+Con base en el análisis del modelo original y los requerimientos funcionales del microservicio de consulta y me gusta, se identificó una oportunidad clara para mejorar el rendimiento de las consultas, especialmente aquellas relacionadas con el estado actual de los inmuebles.
+
+#### Problema identificado
+
+En el modelo inicial, para conocer el estado actual de un inmueble se requiere una subconsulta sobre `status_history`, combinada con un `JOIN` y un `GROUP BY`.
+
+
+Este tipo de consultas escala mal en volumen y es costoso a nivel de CPU, especialmente si se ejecuta frecuentemente.
+
+
+### Solución propuesta
+
+Se propone desnormalizar parcialmente el modelo agregando un campo directo en la tabla property.
+
+```
+ALTER TABLE property
+ADD COLUMN current_status_id INT,
+ADD CONSTRAINT fk_property_current_status
+    FOREIGN KEY (current_status_id) REFERENCES status(id);
+```
+
+Este nuevo campo se sincroniza cada vez que cambia el estado de una propiedad (vía aplicación o trigger) y permite eliminar el JOIN con status_history al consultar el estado actual de manera directa.
+
+
+#### Nuevo Diagrama E/R
+
+![diseño final](docs/diseño-final-extra.drawio.png)
+
+Se añade una relación directa de property a status, manteniendo la relación muchos-a-muchos con status_history para conservar el historial.
+
+
+#### Beneficios de la propuesta
+
+- Reducción drástica del tiempo de respuesta en consultas frecuentes
+
+- Eliminación de subconsultas y agregaciones costosas
+
+- Simplificación de la lógica SQL
+
+- Mantenimiento de la trazabilidad histórica con status_history
+
+- Integridad referencial asegurada mediante FOREIGN KEY
+
+
+#### Justificación técnica
+
+Si bien esta modificación rompe parcialmente la Tercera Forma Normal (3FN), se trata de una desnormalización controlada, que es una práctica común y aceptada cuando el rendimiento de lectura es prioritario. La integridad del dato se conserva al garantizar sincronización entre status_history y property.current_status_id.
+
+
+#### Conclusión
+
+Esta propuesta busca balancear entre rendimiento, simplicidad de consulta y preservación de integridad del modelo de datos, aportando valor especialmente en entornos de alta concurrencia o grandes volúmenes.
