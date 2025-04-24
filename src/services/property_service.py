@@ -1,4 +1,5 @@
 from src.database.db import get_connection
+from src.models.property import Property
 
 def get_properties(filters: dict) -> list:
     connection = get_connection()
@@ -42,10 +43,23 @@ def get_properties(filters: dict) -> list:
     if "status" in filters:
         query += " AND s.name = %s"
         values.append(filters["status"])
-        
+
     cursor.execute(query, values)
     results = cursor.fetchall()
 
     cursor.close()
     connection.close()
-    return results
+    
+    properties = []
+    for row in results:
+        prop = Property(
+            address=row["address"],
+            city=row["city"],
+            status=row["status"],
+            price=row["price"],
+            year=row["year"],
+            description=row["description"]
+        )
+        properties.append(prop.to_dict())
+
+    return properties
