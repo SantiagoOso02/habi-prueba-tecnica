@@ -175,3 +175,41 @@ Por último, para probar los endpoints directamente desde Postman o tu navegador
 
 
 # Servicio de "Me gusta"
+Este segundo microservicio es conceptual y no requiere implementación en código. Su objetivo es modelar la funcionalidad que permite a los usuarios registrados darle "me gusta" a propiedades y mantener un historial de dichas acciones.
+
+## Requerimientos funcionales
+
+- Un usuario puede darle "me gusta" a un inmueble en específico.
+- Cada "me gusta" debe ser registrado junto con la fecha en que se dio.
+- Se debe mantener un historial de qué usuario dio "me gusta" a qué inmueble.
+- No se permite que un mismo usuario le dé "me gusta" varias veces a la misma propiedad.
+
+---
+
+## Propuesta de modelo E/R
+
+El modelo antes de este microservicio era el siguiente:
+
+![E-R-primer-requerimiento drawio](https://github.com/user-attachments/assets/6312bd35-8b7b-4f69-8f2a-e88db3b1863e)
+
+
+Luego de añadir lo necesario para cumplir con los requerimientos del segundo microservicio este es el resultado final
+
+
+![E-R-segundo-requerimiento drawio](https://github.com/user-attachments/assets/34df8c8f-17c1-43eb-b16b-d35cd963e75c)
+
+Ambos diagramas se encuentran en la carpeta `docs/`
+
+
+## Justificación del modelo
+
+- Se creó una nueva tabla `User` para representar a los usuarios registrados.
+- Se añadió una tabla `LikeHistory` que representa una relación **muchos a muchos** entre usuarios e inmuebles (`Property`), con un campo adicional `like_date` para almacenar la fecha y hora en que se dio el "me gusta".
+- La **clave primaria compuesta** `(user_id, property_id)` garantiza que un usuario no pueda dar "me gusta" al mismo inmueble más de una vez.
+- Las relaciones están normalizadas y no hay datos redundantes.
+
+---
+
+### SQL para extender el modelo
+
+El código SQL para extender esta parte del modelo se encuentra en el archivo `docs/sql`.
