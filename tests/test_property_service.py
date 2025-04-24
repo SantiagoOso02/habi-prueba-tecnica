@@ -51,5 +51,14 @@ class TestGetProperties(unittest.TestCase):
             self.assertEqual(prop["city"], "bogota")
             self.assertEqual(prop["status"], "pre_venta")
 
+    def test_should_return_expected_fields_in_each_property(self):
+        filters = {}
+        expected_fields = {"address", "city", "status", "price", "year", "description"}
+
+        result = get_properties(filters)
+
+        for prop in result:
+            self.assertTrue(expected_fields.issubset(prop.keys()))
+            
 if __name__ == "__main__":
     unittest.main()
