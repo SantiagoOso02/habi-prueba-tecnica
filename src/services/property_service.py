@@ -39,6 +39,10 @@ def get_properties(filters: dict) -> list:
         query += " AND p.city = %s"
         values.append(filters["city"])
 
+    if "status" in filters:
+        query += " AND s.name = %s"
+        values.append(filters["status"])
+        
     cursor.execute(query, values)
     results = cursor.fetchall()
 
