@@ -23,6 +23,13 @@ class TestGetProperties(unittest.TestCase):
         for prop in result:
             self.assertEqual(prop["year"], 2020)
 
+    def test_should_filter_properties_by_city(self):
+        filters = {"city": "bogota"}
+        result = get_properties(filters)
+
+        for prop in result:
+            self.assertEqual(prop["city"], "bogota")
+
 
 if __name__ == "__main__":
     unittest.main()
