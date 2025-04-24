@@ -37,6 +37,19 @@ class TestGetProperties(unittest.TestCase):
         for prop in result:
             self.assertEqual(prop["status"], "en_venta")
 
-            
+    def test_should_filter_properties_by_multiple_fields(self):
+        filters = {
+            "year": 2020,
+            "city": "bogota",
+            "status": "pre_venta"
+        }
+
+        result = get_properties(filters)
+
+        for prop in result:
+            self.assertEqual(prop["year"], 2020)
+            self.assertEqual(prop["city"], "bogota")
+            self.assertEqual(prop["status"], "pre_venta")
+
 if __name__ == "__main__":
     unittest.main()
