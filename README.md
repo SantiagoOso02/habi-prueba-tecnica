@@ -212,4 +212,4 @@ Ambos diagramas se encuentran en la carpeta `docs/`
 
 ### SQL para extender el modelo
 
-El código SQL para extender esta parte del modelo se encuentra en el archivo `docs/sql`.
+El código SQL para extender esta parte del modelo se encuentra en el archivo `docs/ms2.sql`.
