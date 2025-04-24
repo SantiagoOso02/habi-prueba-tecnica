@@ -34,6 +34,10 @@ def get_properties(filters: dict) -> list:
     if "year" in filters:
         query += " AND p.year = %s"
         values.append(filters["year"])
+    
+    if "city" in filters:
+        query += " AND p.city = %s"
+        values.append(filters["city"])
 
     cursor.execute(query, values)
     results = cursor.fetchall()
