@@ -16,5 +16,13 @@ class TestGetProperties(unittest.TestCase):
         for prop in result:
             self.assertIn(prop["status"], allowed_statuses)
 
+    def test_should_filter_properties_by_year(self):
+        filters = {"year": 2020}
+        result = get_properties(filters)
+
+        for prop in result:
+            self.assertEqual(prop["year"], 2020)
+
+
 if __name__ == "__main__":
     unittest.main()
